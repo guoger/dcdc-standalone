@@ -7,6 +7,7 @@
 
 #include "../LPC17xx.h"
 #include "../adc/adc.h"
+#include "../control/control.h"
 
 int ADC[ADCChannels];
 int UpdateChannel;
@@ -14,6 +15,9 @@ int UpdateChannel;
 int pos[ADCChannels];
 int glitches[ADCChannels];
 int Buffer[2][GlitchBuffer][ADCChannels];
+
+extern int Vout, Vin, Il;
+int Iref;
 
 void ADCvaluesInit(void);
 
@@ -49,16 +53,26 @@ void ADCRead(unsigned char ADC)
 
 void ADC_IRQHandler(void)
 {
+	// ADC interrupt handler
+	// put control function in this context
 	int Channel;
 	Channel = (LPC_ADC->ADGDR >> 24) & 0x00000007;
 	ADC[Channel] = (LPC_ADC->ADGDR >> 4) & 0x00000FFF;
-	UpdateChannel = Channel;
+	// UpdateChannel = Channel;
 	Channel++;
 	if(Channel < ADCChannels)
-		ADCRead(Channel);
+		ADCRead(Channel); // Still in the reading cycle, read next ADC value
 	else
 	{
-		LPC_GPIO1->FIOPIN ^= (1 << 29);
+		LPC_GPIO1->FIOPIN ^= (1 << 29); // toggle LED
+		Vout = ADCValues(0);
+		Vin = ADCValues(1);
+		Iref = ADCValues(2);
+		Il = ADCValues(3) - Iref;
+		MeanValues();
+		Bangbang();
+		ADCRead(0); // After a control cycle, start next one
+		LPC_GPIO1->FIOPIN ^= (1 << 29);// toggle LED
 		//ADCRead(0);
 		/**/
 	}

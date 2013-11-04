@@ -7,8 +7,8 @@
 
 #include "../LPC17xx.h"
 #include "../adc/adc.h"
-#include "../bang/bang.h"
-#include "../control/control.h"
+// #include "../bang/bang.h"
+// #include "../control/control.h"
 
 extern void SystemInit(void);
 
@@ -19,9 +19,9 @@ extern void welcomeMsg(void);
 extern void set_echo(void);
 extern uint8_t printchar(const char *charBuf);
 
-extern int UpdateChannel;
-extern int Vout, Vin, Il;
-int Iref;
+// extern int UpdateChannel;
+// extern int Vout, Vin, Il;
+// int Iref;
 
 int main(void)
 {
@@ -48,6 +48,7 @@ int main(void)
 
 	while(1)
 	{
+		/*
 		handle_command();
 		if(UpdateChannel >= 3)
 		{
@@ -61,6 +62,7 @@ int main(void)
 			BangBang();
 			LPC_GPIO1->FIOPIN ^= (1 << 29);
 		}
+		*/
 	}
 
 	return 0;
