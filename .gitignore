@@ -1,0 +1,7 @@
+# ignore compile files
+*.zip
+*.o
+*.elf
+*.bin
+*.hex
+*.ihex
