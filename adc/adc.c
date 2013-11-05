@@ -70,7 +70,7 @@ void ADC_IRQHandler(void)
 		Iref = ADCValues(2);
 		Il = ADCValues(3) - Iref;
 		MeanValues();
-		Bangbang();
+		BangBang();
 		ADCRead(0); // After a control cycle, start next one
 		LPC_GPIO1->FIOPIN ^= (1 << 29);// toggle LED
 		//ADCRead(0);
